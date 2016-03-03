@@ -49,42 +49,55 @@ Player.prototype.render = function() {
 
 Player.prototype.handleInput = function(key) {
     
-    var step = 100,
+    var step_x = 101,
+        step_y = 83,
         canvasHeight = 606,
         canvasWidth = 505;
+
+    var music = document.getElementById("jump");
+        music.volume = 0.3;
+
+    
 
 
     switch(key){
                 
         case 'up':
             
-            if((this.y - step) > 0){
-                this.y -= step;    
+            if((this.y - step_y) > 0){
+                this.y -= step_y;    
             } 
             
+            music.play();
+
             break;
 
         case 'down':
             
-            if((this.y + step) < canvasHeight){
+            if((this.y + step_y) < canvasHeight){
                 console.log(this.y);
-                this.y += step;    
+                this.y += step_y;    
             }
+            music.play();
 
             break;
 
         case 'right':
 
-            this.x += step;
+            this.x += step_x;
+            music.play();
+
             break;
 
         case 'left':
             
 
-            if((this.x - step) > 0){
-                this.x -= step;    
+            if((this.x - step_x) > 0){
+                this.x -= step_x;    
             } 
-            
+            music.play();
+
+
             break;   
     }
 
@@ -103,20 +116,22 @@ Player.prototype.handleInput = function(key) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var allEnemies = [new Enemy(), new Enemy()];
+var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 
-allEnemies[0].x = 0;
-allEnemies[0].y = 50;
+allEnemies[0].x = 101 * utils.randomNumber(1, 4);
+allEnemies[0].y = 75 * utils.randomNumber(1, 3);
 
-allEnemies[1].x = 0;
-allEnemies[1].y = 100;
+allEnemies[1].x = 101 * utils.randomNumber(1, 4);
+allEnemies[1].y = 75 * utils.randomNumber(1, 3);
 
+allEnemies[2].x = 101 * utils.randomNumber(1, 4);
+allEnemies[2].y = 75 * utils.randomNumber(1, 3);
 
 
 var player = new Player();
 
-player.x = 0;
-player.y = 0;
+player.x = 101 * utils.randomNumber(1, 4);
+player.y = 75 * 4;
 
 
 // This listens for key presses and sends the keys to your
