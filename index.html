@@ -9,11 +9,11 @@
 
 </head>
 <body>
-    
+
 	<!-- Loading sounds -->
-    <audio id="start" loop>
-      <source src="sounds/native_drum_loop.ogg" type="audio/ogg">
-      <source src="sounds/native_drum_loop.mp3" type="audio/mp3">
+    <audio id="loop" loop>
+      <source src="sounds/loop.ogg" type="audio/ogg">
+      <source src="sounds/loop.mp3" type="audio/mp3">
     </audio>
 
 
@@ -27,7 +27,13 @@
       <source src="sounds/water.mp3" type="audio/mp3">
     </audio>
 
-	
+
+	<audio id="over">
+		<source src="sounds/over.ogg" type="audio/ogg">
+		<source src="sounds/over.mp3" type="audio/mp3">
+	</audio>
+
+
 
 	<script>
 
@@ -35,7 +41,7 @@
 		$( document ).ready(function() {
 		    console.log( "ready!" );
 
-			var music = document.getElementById("start");
+			var music = document.getElementById("loop");
 		  	music.volume = 0.15;
 
 		    music.play();
