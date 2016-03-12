@@ -7,10 +7,14 @@ var Enemy = function() {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 
+    // current x position
     this.x = 0;
+    // current y position
     this.y = 0;
+    // width - used for collision detection
     this.w = 60;
-    this.h = 33;
+    // height - used for collision detection
+    this.h = 60;
 
 };
 
@@ -21,8 +25,9 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    console.log(dt);
     this.x += 10 * dt;
+
+    this.hasReachedBoundary();
 
 };
 
@@ -33,13 +38,15 @@ Enemy.prototype.render = function() {
 
 };
 
+// position enemy at random point on the screen - lanes only
 Enemy.prototype.generateRandomStartPos = function() {
 
-    this.x = 101 * utils.randomNumber(0, 4);
-    this.y = 75 * utils.randomNumber(1, 3);
+    this.x = 110 * utils.randomNumber(0, 4);
+    this.y = 90 * utils.randomNumber(1, 3) - 40 ;
 
 };
 
+// get boundaries of the enemy
 Enemy.prototype.getBounds = function() {
 
     var bounds = {};
@@ -53,6 +60,18 @@ Enemy.prototype.getBounds = function() {
 
 };
 
+// check whether the enemy left the canvas and if required put it back to random lane
+Enemy.prototype.hasReachedBoundary = function() {
+
+    if ( this.x > canvasWidth) {
+
+        this.generateRandomStartPos();
+        this.x = 0;
+
+    }
+
+};
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -61,44 +80,42 @@ var Player = function() {
 
     this.sprite = 'images/char-boy.png';
 
+    // current x and y positions
     this.x = 0;
     this.y = 0;
+    // width and height of the player
     this.w = 83;
     this.h = 101;
 
-    this.music = {};
+    // step sizes - along x and y axises
+    this.step_x = 101;
+    this.step_y = 83;
 
-    this.music.jump = document.getElementById("jump");
-    this.music.water = document.getElementById("water");
-    this.music.over = document.getElementById("over");
-    this.music.volume = 0.3;
-
-    //sound
-    //player_dead
 };
 
+// update function invokes check collision function every time - performance optimization is required
 Player.prototype.update = function(dt) {
-
-    // console.log("update");
 
     this.checkCOllision();
 
-    //console.log(this.hasReachedBoundary());
 };
 
+// render function to draw the player in the right x and y position of the canvas
 Player.prototype.render = function() {
 
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 };
 
+// put the player in random position on the grass
 Player.prototype.generateRandomStartPos = function() {
 
     this.x = 101 * utils.randomNumber(0, 4);
-    this.y = 75 * utils.randomNumber(4, 5);
+    this.y = 83 * utils.randomNumber(4, 5) - 12;
 
 };
 
+// get player's boundaries
 Player.prototype.getBounds = function() {
 
     var bounds = {};
@@ -112,93 +129,24 @@ Player.prototype.getBounds = function() {
 
 };
 
-Player.prototype.hasReachedBoundary = function() {
-
-    var bounds = this.getBounds();
-
-    //console.log("start_x: " + bounds.start_x );
-    //console.log("end_x: " + bounds.end_x );
-    //
-    //console.log("start_y: " + bounds.start_y );
-    //console.log("end_y: " + bounds.end_y );
-
-
-    if ( bounds.start_y < 0 ) {
-
-        console.log("Congratulations!");
-
-        this.music.water.play();
-
-        player.generateRandomStartPos();
-
-        allEnemies.forEach(function(enemy) {
-            enemy.generateRandomStartPos();
-        });
-
-        return true;
-
-    }  else {
-
-        if ( bounds.end_y > 476) {
-
-            this.y = 5 * 75;
-
-            return false;
-
-        }
-
-    }
-
-    if ( bounds.start_x < 0) {
-
-        this.x = 0;
-
-        return true;
-
-    } else {
-
-        if ( bounds.end_x > 486) {
-
-            this.x = 4 * 101;
-
-            return false;
-
-        }
-
-    }
-
-    return false;
-
-};
-
+// check player's collision with all enemies and restart the game if required
 Player.prototype.checkCOllision = function() {
-
 
     var player = this;
     var player_bounds =  player.getBounds();
 
-    var i = 0;
-
     allEnemies.forEach(function(enemy) {
 
         var enemy_bounds = enemy.getBounds();
-
-        i++;
-
-        console.log(enemy.x);
-        console.log("check collision");
-        console.log(enemy.start_x);
-
 
         if (player_bounds.start_x < enemy_bounds.end_x &&
             player_bounds.end_x > enemy_bounds.start_x &&
             player_bounds.start_y < enemy_bounds.end_y &&
             player_bounds.end_y > enemy_bounds.start_y) {
 
+            $("#console").text("He he he... Try again!");
 
-            console.log("The END!");
-
-            player.music.over.play();
+            music.over.play();
 
             player.generateRandomStartPos();
 
@@ -207,37 +155,32 @@ Player.prototype.checkCOllision = function() {
             });
 
             return true;
-
         }
-
-
 
     });
 
     return false;
 
-
 };
 
+// check pressed key and move the player if it is not outside the boundaries
+// the game is restarted if the player reaches the water
 Player.prototype.handleInput = function(key) {
-
-    var step_x = 101,
-        step_y = 83,
-        canvasHeight = 606,
-        canvasWidth = 505;
 
     switch(key){
 
         case 'up':
 
-            //console.log(this.hasReachedBoundary());
+            if(this.y > this.step_y) {
 
-            if(!this.hasReachedBoundary()) {
-
-                this.y -= step_y;
-                this.music.jump.play();
+                this.y -= this.step_y;
+                music.jump.play();
 
             } else {
+
+                $("#console").text("Congratulations!");
+
+                music.water.play();
 
                 player.generateRandomStartPos();
 
@@ -247,89 +190,109 @@ Player.prototype.handleInput = function(key) {
 
             }
 
-
             break;
 
         case 'down':
 
-            //console.log(this.hasReachedBoundary());
+            if(this.y < this.step_y * 4) {
 
-            if(!this.hasReachedBoundary()) {
+                this.y += this.step_y;
+                music.jump.play();
 
-                this.y += step_y;
-                this.music.jump.play();
+            } else {
 
+                $("#console").text("go the opposite direction...");
             }
 
             break;
 
         case 'right':
 
+            if(this.x < this.step_x * 4) {
 
-            //console.log(this.hasReachedBoundary());
+                this.x += this.step_x;
+                music.jump.play();
 
-            if(!this.hasReachedBoundary()) {
+            } else {
 
-                this.x += step_x;
-                this.music.jump.play();
-
+                $("#console").text("there is no escape from this world...");
             }
 
             break;
 
         case 'left':
 
-            //console.log(this.hasReachedBoundary());
+            if(this.x >= this.step_x) {
 
-            if(!this.hasReachedBoundary()) {
+                this.x -= this.step_x;
+                music.jump.play();
 
-                this.x -= step_x;
-                this.music.jump.play();
+            } else {
 
+                $("#console").text("where're you going?!");
             }
 
             break;
     }
 
+};
+
+
+// Additional useful functions
+window.utils = window.utils || {};
+
+/*
+ Random Number Generator.
+
+ Pretty awesome explanation here:
+ http://stackoverflow.com/a/1527820
+ */
+utils.randomNumber = function(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+utils.isInt = function(number) {
+    return parseFloat(number) === parseInt(number);
+};
+
+utils.intersect = function(bounds1, bounds2) {
+
+    return !(
+        bounds1.end_x < bounds2.start_x ||
+        bounds2.end_x < bounds1.start_x ||
+        bounds1.end_y < bounds2.start_y ||
+        bounds2.end_y < bounds1.start_y
+    );
 
 };
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var allEnemies = [],
-    number_enemies = 10;
+var canvasHeight = 606;
+var canvasWidth = 505;
 
+// change number of enemies if needed
+var allEnemies = [],
+    number_enemies = 7;
+
+// create enemies in loop
 for (i = 0; i < number_enemies; i++) {
     allEnemies.push(new Enemy());
 }
 
+// generate random start position for each enemy
 allEnemies.forEach(function(enemy) {
     enemy.generateRandomStartPos();
 });
 
+// crate player
 var player = new Player();
 
+// generate random position for the player
 player.generateRandomStartPos();
-
-//generateRandomVelocity() // enemy only
-
-//hasReachedBoundary() // for player & for enemy
-
-//init() // for player & for enemy
-//checkCOllision() // enemy with enemy, player with enemy
-//
-//utils.intersect(boy_bounds, bug_bounds)
-//
-//Player class
-
-//
-//Enemy class
-//x, y, w, h
-//img
-//sound
-//enemy_bounds // start_x, start_y, end_x, end_y
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -345,3 +308,51 @@ document.addEventListener('keyup', function(e) {
 });
 
 
+$( document ).ready(function() {
+
+
+    // add text/console to the html where all notes to the player will be shown
+    $("body").append("<div id='console'>Do your best and cross the road... if you are brave enough:)</div>");
+
+    // create global music object and load sounds for player's movement and game events
+    music = {};
+    music.loop = document.getElementById("loop");
+    music.jump = document.getElementById("jump");
+    music.water = document.getElementById("water");
+    music.over = document.getElementById("over");
+    music.loop.volume = 0.2;
+    music.isMute = false;
+
+    music.loop.play();
+
+    // Mute the game if button is clicked
+    $("#mute").click(function() {
+
+        if(music.isMute == false) {
+
+            for (var sound in music) {
+                if (music.hasOwnProperty(sound)) {
+                    music[sound].volume = 0;
+                }
+            }
+
+            music.isMute = true;
+
+            $("#mute").text("Play Sound");
+
+        } else {
+
+            for (var sound in music) {
+                if (music.hasOwnProperty(sound)) {
+                    music[sound].volume = 0.2;
+                }
+            }
+
+            music.isMute = false;
+
+            $("#mute").text("Mute Sound");
+
+        }
+    });
+
+});

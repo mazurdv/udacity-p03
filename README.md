@@ -1,6 +1,39 @@
-frontend-nanodegree-arcade-game
-===============================
+# READ this instruction before you will be scared of bugs  
 
-Students should use this [rubric](https://www.udacity.com/course/viewer/#!/c-nd001/l-2696458597/m-2687128535) for self-checking their submission.
+## How to start the game
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+Just launch your favorite web browser and open file index.html
+ 
+No installation is required
+ 
+### How to play the game :notebook_with_decorative_cover:
+
+#### Aim :dart:
+
+Cross the road and safely reach the water without being eaten by the bugs!
+
+#### Key controls :musical_keyboard:
+
+Use up/down/right/left keys on your keyboard to move the player
+
+#### Sound :musical_note:
+
+If you don't want to be scared by different sounds please mute music by clicking "Mute Sound" on the top of the play screen
+
+#### Restart game :recycle:
+
+Should you need to restart the game - just clicke "Restart Game" on the top of the play screen
+
+Every time the game is restarted both the player and bugds are positioned randomnly at different places of the screen
+
+#### License & Copyrigt
+
+Do whatever you want with the game :smile:
+
+#### Source
+                                  
+[GitHub](https://github.com/mazurdv/udacity-p03)
+
+Pull requests are welcomed :smile:
+
+**Enjoy!**
