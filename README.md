@@ -6,7 +6,7 @@ Just launch your favorite web browser and open file index.html
  
 No installation is required
  
-### How to play the game :notebook_with_decorative_cover:
+### How to play the game
 
 #### Aim :dart:
 
@@ -24,7 +24,7 @@ If you don't want to be scared by different sounds please mute music by clicking
 
 Should you need to restart the game - just clicke "Restart Game" on the top of the play screen
 
-Every time the game is restarted both the player and bugds are positioned randomnly at different places of the screen
+Every time the game is restarted both the player and bugs are positioned randomly at different places of the screen
 
 #### License & Copyrigt
 
