@@ -132,8 +132,7 @@ Player.prototype.getBounds = function() {
 // check player's collision with all enemies and restart the game if required
 Player.prototype.checkCOllision = function() {
 
-    var player = this;
-    var player_bounds =  player.getBounds();
+    var player_bounds =  this.getBounds();
 
     allEnemies.forEach(function(enemy) {
 
@@ -148,7 +147,7 @@ Player.prototype.checkCOllision = function() {
 
             music.over.play();
 
-            player.generateRandomStartPos();
+            this.generateRandomStartPos();
 
             allEnemies.forEach(function(enemy) {
                 enemy.generateRandomStartPos();
@@ -157,7 +156,7 @@ Player.prototype.checkCOllision = function() {
             return true;
         }
 
-    });
+    }.bind(this));
 
     return false;
 
@@ -182,7 +181,7 @@ Player.prototype.handleInput = function(key) {
 
                 music.water.play();
 
-                player.generateRandomStartPos();
+                this.generateRandomStartPos();
 
                 allEnemies.forEach(function(enemy) {
                     enemy.generateRandomStartPos();
@@ -279,7 +278,7 @@ var allEnemies = [],
     number_enemies = 7;
 
 // create enemies in loop
-for (i = 0; i < number_enemies; i++) {
+for (var i = 0; i < number_enemies; i++) {
     allEnemies.push(new Enemy());
 }
 
